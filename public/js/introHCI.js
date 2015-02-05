@@ -27,6 +27,8 @@ function addProjectDetails(e) {
 	var idNumber = projectID.substr('project'.length);
 
 	console.log("User clicked on project " + idNumber);
+	console.log('/project/' + idNumber)
+	$.get('/project/' + idNumber, updateInfo);
 }
 
 /*
@@ -34,5 +36,24 @@ function addProjectDetails(e) {
  * and apply it
  */
 function randomizeColors(e) {
-	console.log("User clicked on color button");
+	$.get('/palette', function(data){
+		var colors = data.colors.hex;
+
+		$('body').css('background-color', colors[0]);
+		$('.thumbnail').css('background-color', colors[1]);
+		$('h1, h2, h3, h4, h5, h5').css('color', colors[2]);
+		$('p').css('color', colors[3]);
+		$('.project img').css('opacity', .75);
+	});
+}
+
+
+function updateInfo(data){
+	var proj = $("#project" + data.id);
+	var details = proj.find('.details');
+	var output = "";
+	output += '<img src="' + data.image + '" class="detailsImage">\n';
+	output += '<h3>' + data.date + '</h3>\n';
+	output += data.summary;
+	details.html(output);
 }
